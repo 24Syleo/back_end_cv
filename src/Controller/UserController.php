@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -29,15 +30,20 @@ class UserController extends AbstractController
             $user = new User();
         }
         $data = json_decode($req->getContent(), true);
-        if(is_array($data) && count($data) > 4)
+        if(is_array($data))
         {
             $user->setFirstname($data['firstname']);
             $user->setLastname($data['lastname']);
             $user->setEmail($data['email']);
             $user->setPassword($passHasher->hashPassword($user, $data['password']));
             $user->setAvatar($data['avatar']);
-            $user->getRoles();
-            $user->setRoles(['ROLE_USER']);
+            if(empty($data['roles']))
+            {
+                $user->setRoles(['ROLE_USER']);
+            } else 
+            {
+                $user->setRoles($data['roles']);
+            }
         }
         if (!$id)
         {
@@ -66,10 +72,14 @@ class UserController extends AbstractController
     #[Route('/api/delete_user/{id}',
     name: 'delete_user',
     methods: ['DELETE'])]
-public function deleteUser(?int $id, UserRepository $userRepo)
-{
-return $this->json([
-    "user" => $this->getUser(),
-]);
-} 
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteUser(?int $id, UserRepository $userRepo, EntityManagerInterface $em)
+    {
+        $user = $userRepo->find($id);
+        $em->remove($user);
+
+    return $this->json([
+        "message" => "Utilisateur supprimé",
+    ]);
+    } 
 }
