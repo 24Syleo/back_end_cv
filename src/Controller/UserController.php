@@ -53,18 +53,23 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/api/user/{id}', 
+    #[Route('/api/user', 
             name: 'get_user',
             methods: ['GET'])]
-    public function show(int $id, UserRepository $userRepo)
+    public function show(?int $id, UserRepository $userRepo)
     {
-        if($id)
-        {
-            $user = $userRepo->find($id);
-        }
-
         return $this->json([
-            "user" => $user,
+            "user" => $this->getUser(),
         ]);
-    } 
+    }
+
+    #[Route('/api/delete_user/{id}',
+    name: 'delete_user',
+    methods: ['DELETE'])]
+public function deleteUser(?int $id, UserRepository $userRepo)
+{
+return $this->json([
+    "user" => $this->getUser(),
+]);
+} 
 }

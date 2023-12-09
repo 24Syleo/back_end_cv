@@ -2,17 +2,29 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AuthentificationController extends AbstractController
 {
-    #[Route('/authentification', name: 'app_authentification')]
-    public function index(): Response
+    #[Route('/api/login', name: 'api_login', methods:['POST'])]
+    public function login(#[CurrentUser] ?User $user, EntityManagerInterface $em): Response
     {
-        return $this->render('authentification/index.html.twig', [
-            'controller_name' => 'AuthentificationController',
+        if (null === $user) 
+        {
+            return $this->json([
+                'message' => 'missing credentials',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+        $user->setToken(bin2hex(random_bytes(32)));
+        $em->flush();
+
+        return $this->json([
+            'user' => $user
         ]);
-    }
+    } 
 }
