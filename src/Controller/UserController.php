@@ -16,22 +16,55 @@ class UserController extends AbstractController
     #[Route('/api/create_user', 
             name: 'create_user',
             methods: ['POST'])]
-    public function createUser(Request $req, UserRepository $userRepo, EntityManagerInterface $em, UserPasswordHasherInterface $passHasher): JsonResponse
+    #[Route('/api/update_user/{id}', 
+            name: 'update_user',
+            methods: ['PUT'])]
+    public function createUser(?int $id, Request $req, EntityManagerInterface $em, UserPasswordHasherInterface $passHasher, UserRepository $userRepo): JsonResponse
     {
+        if ($id)
+        {
+            $user = $userRepo->find($id);
+        } else 
+        {
+            $user = new User();
+        }
         $data = json_decode($req->getContent(), true);
-        $user = new User();
         if(is_array($data) && count($data) > 4)
         {
             $user->setFirstname($data['firstname']);
             $user->setLastname($data['lastname']);
             $user->setEmail($data['email']);
+            $user->setPassword($passHasher->hashPassword($user, $data['password']));
             $user->setAvatar($data['avatar']);
-            dump($user);
-
+            $user->getRoles();
+            $user->setRoles(['ROLE_USER']);
+        }
+        if (!$id)
+        {
+            $em->persist($user);
+            $em->flush();
+        } else 
+        {
+            $em->flush();
         }
 
         return $this->json([
-            "user" => $data,
+            "user" => $user,
         ]);
     }
+
+    #[Route('/api/user/{id}', 
+            name: 'get_user',
+            methods: ['GET'])]
+    public function show(int $id, UserRepository $userRepo)
+    {
+        if($id)
+        {
+            $user = $userRepo->find($id);
+        }
+
+        return $this->json([
+            "user" => $user,
+        ]);
+    } 
 }
