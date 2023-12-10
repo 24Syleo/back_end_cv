@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,6 +44,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
+
+    #[ORM\OneToMany(mappedBy: 'User', targetEntity: Columns::class, orphanRemoval: true)]
+    private Collection $columns;
+
+    public function __construct()
+    {
+        $this->columns = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -152,6 +162,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setToken(?string $token): static
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Columns>
+     */
+    public function getColumns(): Collection
+    {
+        return $this->columns;
+    }
+
+    public function addColumn(Columns $column): static
+    {
+        if (!$this->columns->contains($column)) {
+            $this->columns->add($column);
+            $column->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeColumn(Columns $column): static
+    {
+        if ($this->columns->removeElement($column)) {
+            // set the owning side to null (unless already changed)
+            if ($column->getUser() === $this) {
+                $column->setUser(null);
+            }
+        }
 
         return $this;
     }
