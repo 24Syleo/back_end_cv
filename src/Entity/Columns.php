@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ColumnsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ColumnsRepository::class)]
 #[ApiResource]
@@ -16,6 +17,7 @@ class Columns
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Renseigner un titre")]
     private ?string $title = null;
 
     #[ORM\Column(nullable: true)]
@@ -23,6 +25,7 @@ class Columns
 
     #[ORM\ManyToOne(inversedBy: 'columns')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: "Vous êtes?")]
     private ?User $User = null;
 
     public function getId(): ?int
