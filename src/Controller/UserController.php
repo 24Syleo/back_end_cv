@@ -51,7 +51,6 @@ class UserController extends AbstractController
                 }
             }
             $errors = $validator->validate($user);
-
             if (count($errors) > 0) {
                 foreach ($errors as $error) {
                     return $this->json([
