@@ -16,12 +16,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
-    #[Route('/api/create_user', 
-            name: 'create_user',
-            methods: ['POST'])]
-    #[Route('/api/update_user/{id}', 
-            name: 'update_user',
-            methods: ['PUT'])]
+    #[Route('/api/create_user', name: 'create_user', methods: ['POST'])]
+    #[Route('/api/update_user/{id}', name: 'update_user', methods: ['PUT'])]
     public function createUser(?int $id, Request $req, EntityManagerInterface $em, UserPasswordHasherInterface $passHasher, UserRepository $userRepo, ValidatorInterface $validator): JsonResponse
     {
         try 
@@ -79,9 +75,7 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route('/api/user', 
-            name: 'get_user',
-            methods: ['GET'])]
+    #[Route('/api/user', name: 'get_user', methods: ['GET'])]
     public function show()
     {
         try {
@@ -95,9 +89,7 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route('/api/delete_user/{id}',
-    name: 'delete_user',
-    methods: ['DELETE'])]
+    #[Route('/api/delete_user/{id}',name: 'delete_user',methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN')]
     public function deleteUser(?int $id, UserRepository $userRepo, EntityManagerInterface $em)
     {
