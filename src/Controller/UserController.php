@@ -65,9 +65,11 @@ class UserController extends AbstractController
             $errors = $validator->validate($user);
 
             if (count($errors) > 0) {
-                return $this->json([
-                    "error" => $errors,
-                ]);
+                foreach ($errors as $error) {
+                    return $this->json([
+                        "error" => $error->getMessage()
+                    ]);
+                }
             }
 
             if (!$id)
