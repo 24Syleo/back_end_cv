@@ -37,18 +37,6 @@ class UserController extends AbstractController
             $data = json_decode($req->getContent(), true);
             if(is_array($data))
             {
-                // foreach($data as $key => $value) 
-                // {
-                //     if(empty($value))
-                //     return $this->json([
-                //             $key => "Ne peut pas être null"
-                //         ]);
-                // }
-                // if (strlen($data['password']) < 6) {
-                //     return $this->json([
-                //         "error" => "Mot de passe doit avoir plus de 6 caractères",
-                //     ]);
-                // } 
                 $user->setFirstname($data['firstname']);
                 $user->setLastname($data['lastname']);
                 $user->setEmail($data['email']);
