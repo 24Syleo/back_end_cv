@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Columns;
 use App\Repository\ColumnsRepository;
+use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,14 +58,23 @@ class ColumnsController extends AbstractController
 
     #[Route('/api/get_columns', name: 'get_columns', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function showColumns(ColumnsRepository $colRepo): JsonResponse
+    public function showColumns(ColumnsRepository $colRepo, TaskRepository $taskRepo): JsonResponse
     {
         try {
             $user = $this->getUser();
             $cols = $colRepo->findBy(['User' => $user]);
+            $columns = [];
 
+            foreach ($cols as $col) {
+                $tasks = $taskRepo->findBy(['cols' => $col]);
+    
+                $columns[] = [
+                    'column' => $col,
+                    'tasks' => $tasks,
+                ];
+            }
             return $this->json([
-                "columns" => $cols,
+                "columns" => $columns
             ]);
         } catch (Exception $e) {
             return $this->json([

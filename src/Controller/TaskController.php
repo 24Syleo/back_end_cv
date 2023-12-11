@@ -58,4 +58,28 @@ class TaskController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/api/delete_task/{task_id}', name: 'delete_task', methods: ['DELETE'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function deleteColumns(int $task_id, TaskRepository $taskRepo, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $task = $taskRepo->find($task_id);
+            if (!$task) {
+                return $this->json([
+                    "error" => "Pas de tache",
+                ]);
+            }
+            $em->remove($task);
+            $em->flush();
+            return $this->json([
+                "success" => "Tache supprimée"
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
+    }
+
 }
