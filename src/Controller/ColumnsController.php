@@ -15,7 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ColumnsController extends AbstractController
 {
-    #[Route('/api/create_columns/{column_id}', name: 'create_columns', methods: ['POST','PUT'])]
+    #[Route('/api/create_columns', name: 'create_columns', methods: ['POST'])]
+    #[Route('/api/update_columns/{column_id}', name: 'update_columns', methods: ['PUT'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function createColumns(?int $column_id,Request $req, ValidatorInterface $validator, EntityManagerInterface $em, ColumnsRepository $colRepo): JsonResponse
     {

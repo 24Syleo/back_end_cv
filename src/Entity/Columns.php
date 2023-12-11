@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\ColumnsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ColumnsRepository;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ColumnsRepository::class)]
