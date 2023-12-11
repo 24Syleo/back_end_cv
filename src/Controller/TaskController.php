@@ -2,17 +2,59 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Task;
+use App\Repository\ColumnsRepository;
+use Exception;
+use App\Repository\TaskRepository;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TaskController extends AbstractController
 {
-    #[Route('/task', name: 'app_task')]
-    public function index(): Response
+    #[Route('/api/create_task', name: 'create_task', methods:['POST'])]
+    #[Route('/api/update_task/{task_id}', name: 'update_task', methods: ['PUT'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function createTask(ColumnsRepository $colRepo, TaskRepository $taskRepo, ?int $task_id, Request $req, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
-        return $this->render('task/index.html.twig', [
-            'controller_name' => 'TaskController',
-        ]);
+        try {
+            if ($task_id) {
+                $task = $taskRepo->find($task_id);
+            } else {
+                $task  = new Task();
+            }
+            $data = json_decode($req->getContent(), true);
+            if ($data) {
+                $col = $colRepo->find($data['colId']);
+                $task->setTitle($data['title']);
+                $task->setDescription($data['description']);
+                $task->setCreatedAt(new DateTimeImmutable());
+                $task->setCols($col);
+            }
+            $errors = $validator->validate($task);
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
+                    return $this->json([
+                        "error" => $error->getMessage()
+                    ]);
+                }
+            }
+            if (!$task_id) {
+                $em->persist($task);
+            }
+            $em->flush();
+            return $this->json([
+                'task' => $task
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
     }
 }
