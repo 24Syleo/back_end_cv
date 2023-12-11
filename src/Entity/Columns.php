@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ColumnsRepository;
 use ApiPlatform\Metadata\ApiResource;
@@ -27,6 +29,14 @@ class Columns
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank(message: "Vous êtes?")]
     private ?User $User = null;
+
+    #[ORM\OneToMany(mappedBy: 'cols', targetEntity: Task::class)]
+    private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -65,6 +75,36 @@ class Columns
     public function setUser(?User $User): static
     {
         $this->User = $User;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): static
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setCols($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getCols() === $this) {
+                $task->setCols(null);
+            }
+        }
 
         return $this;
     }
