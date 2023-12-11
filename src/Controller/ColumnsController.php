@@ -53,4 +53,22 @@ class ColumnsController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/api/get_columns', name: 'get_columns', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function showColumns(ColumnsRepository $colRepo): JsonResponse
+    {
+        try {
+            $user = $this->getUser();
+            $cols = $colRepo->findBy(['User' => $user]);
+
+            return $this->json([
+                "columns" => $cols,
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
+    }
 }
