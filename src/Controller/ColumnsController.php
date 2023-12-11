@@ -72,4 +72,31 @@ class ColumnsController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/api/delete_columns/{column_id}', name: 'delete_columns', methods: ['DELETE'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function deleteColumns(int $column_id, ColumnsRepository $colRepo, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $user = $this->getUser();
+            $cols = $colRepo->findBy(['User' => $user]);
+            foreach($cols as $col) {
+                if ($col->getId() === $column_id) {
+                    $em->remove($col);
+                    $em->flush();
+                } else {
+                    return $this->json([
+                        "error" => "La colonne n'existe pas"
+                    ]);
+                }
+            }
+            return $this->json([
+                "success" => "colonne supprimé"
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
+    }
 }

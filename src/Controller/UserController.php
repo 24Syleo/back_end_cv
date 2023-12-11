@@ -96,6 +96,7 @@ class UserController extends AbstractController
         try {
             $user = $userRepo->find($id);
             $em->remove($user);
+            $em->flush();
             return $this->json([
                 "message" => "Utilisateur supprimé",
             ]);
