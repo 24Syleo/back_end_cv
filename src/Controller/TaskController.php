@@ -6,7 +6,6 @@ use App\Entity\Task;
 use App\Repository\ColumnsRepository;
 use Exception;
 use App\Repository\TaskRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,11 +29,13 @@ class TaskController extends AbstractController
             }
             $data = json_decode($req->getContent(), true);
             if ($data) {
-                $col = $colRepo->find($data['colId']);
+                $date = new \DateTimeImmutable('');
                 $task->setTitle($data['title']);
+                $task->setCols($colRepo->find($data['colId']));
                 $task->setDescription($data['description']);
-                $task->setCreatedAt(new DateTimeImmutable());
-                $task->setCols($col);
+                if(!$task_id){
+                    $task->setCreatedAt($date);
+                }
             }
             $errors = $validator->validate($task);
             if (count($errors) > 0) {

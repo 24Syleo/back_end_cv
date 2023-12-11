@@ -30,7 +30,6 @@ class Task
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "Créer quand?")]
-    #[Assert\DateTime(message: "type date")]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
