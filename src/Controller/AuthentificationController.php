@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 
 namespace App\Controller;
 
@@ -37,4 +37,4 @@ class AuthentificationController extends AbstractController
             ]);
         }
     }
-}
+} -->
