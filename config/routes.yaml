@@ -6,3 +6,5 @@ controllers:
 app_logout:
     path: /api/logout
     methods: GET
+api_login_check:
+    path: /api/login_check

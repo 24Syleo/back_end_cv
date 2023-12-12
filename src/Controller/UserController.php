@@ -79,6 +79,7 @@ class UserController extends AbstractController
     public function show()
     {
         try {
+            dump($this->getUser());
             return $this->json([
                 "user" => $this->getUser(),
             ]);

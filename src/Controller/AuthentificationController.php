@@ -12,10 +12,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AuthentificationController extends AbstractController
 {
-    #[Route('/api/login', name: 'api_login', methods:['POST'])]
+    #[Route('/api/login_check', name: 'api_login', methods:['POST'])]
     public function login(#[CurrentUser] ?User $user, EntityManagerInterface $em): Response
     {
         try {
+        dd('ci');
         if (null === $user) 
         {
             return $this->json([
