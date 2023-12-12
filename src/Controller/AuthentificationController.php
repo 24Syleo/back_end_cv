@@ -17,8 +17,6 @@ class AuthentificationController extends AbstractController
     {
         try {
         
-        dump($user);
-
         if (null === $user) 
         {
             return $this->json([
@@ -26,10 +24,8 @@ class AuthentificationController extends AbstractController
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-
-
         return $this->json([
-            'user' => $user    
+            'user' => $user->getUserIdentifier(),
         ]);
         } catch (Exception $e) {
             return $this->json([
