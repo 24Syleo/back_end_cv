@@ -16,15 +16,15 @@ class AuthentificationController extends AbstractController
     public function login(#[CurrentUser] ?User $user, EntityManagerInterface $em): Response
     {
         try {
-        dd('ci');
+        
         if (null === $user) 
         {
             return $this->json([
                 'message' => 'missing credentials',
             ], Response::HTTP_UNAUTHORIZED);
         }
-        $user->setToken(bin2hex(random_bytes(32)));
-        $em->flush();
+
+
 
         return $this->json([
             'user' => $user
