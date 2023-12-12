@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -90,7 +89,6 @@ class UserController extends AbstractController
     }
 
     #[Route('/api/delete_user/{id}',name: 'delete_user',methods: ['DELETE'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function deleteUser(?int $id, UserRepository $userRepo, EntityManagerInterface $em)
     {
         try {

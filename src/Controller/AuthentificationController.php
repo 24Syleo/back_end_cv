@@ -12,29 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AuthentificationController extends AbstractController
 {
-    #[Route('/api/login', name: 'api_login', methods:['POST'])]
-    public function login(#[CurrentUser] ?User $user, EntityManagerInterface $em): Response
-    {
-        try {
-        
-        if (null === $user) 
-        {
-            return $this->json([
-                'message' => 'missing credentials',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
 
-        return $this->json([
-            'user' => $user->getUserIdentifier(),
-        ]);
-        } catch (Exception $e) {
-            return $this->json([
-                'error' => $e->getMessage()
-            ]);
-        }
-    }
-
-    #[Route('/api/logout', name: 'api_logout', methods:['GET'])]
+    #[Route('/api/logout', name: 'api_logout', methods: ['GET'])]
     public function logout()
     {
         return $this->json([
