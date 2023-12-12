@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 
 namespace App\Controller;
 
@@ -29,7 +29,7 @@ class AuthentificationController extends AbstractController
 
 
         return $this->json([
-            'user' => $user
+            'user' => $user    
         ]);
         } catch (Exception $e) {
             return $this->json([
@@ -37,4 +37,4 @@ class AuthentificationController extends AbstractController
             ]);
         }
     }
-} -->
+}
