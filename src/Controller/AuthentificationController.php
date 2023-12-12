@@ -33,4 +33,12 @@ class AuthentificationController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/api/logout', name: 'api_logout', methods:['GET'])]
+    public function logout()
+    {
+        return $this->json([
+            'message' => "Vous êtes déconnecté"
+        ]);
+    }
 }
