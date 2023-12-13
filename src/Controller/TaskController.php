@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Repository\ColumnsRepository;
+use App\Repository\tasksRepository;
 use Exception;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,9 +60,36 @@ class TaskController extends AbstractController
         }
     }
 
+
+    #[Route('/api/get_tasks', name: 'get_tasks', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function showtasks(TaskRepository $taskRepo, ColumnsRepository $colRepo): JsonResponse
+    {
+        try {
+            $user = $this->getUser();
+            $cols = $colRepo->findBy(['User' => $user]);
+
+            foreach ($cols as $col) {
+                $tasks = $taskRepo->findBy(['cols' => $col]);
+    
+                $tasks[] = [
+                    'tasks' => $tasks,
+                ];
+            }
+            return $this->json([
+                "tasks" => $tasks
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
+    }
+
+
     #[Route('/api/delete_task/{task_id}', name: 'delete_task', methods: ['DELETE'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function deleteColumns(int $task_id, TaskRepository $taskRepo, EntityManagerInterface $em): JsonResponse
+    public function deletetasks(int $task_id, TaskRepository $taskRepo, EntityManagerInterface $em): JsonResponse
     {
         try {
             $task = $taskRepo->find($task_id);
