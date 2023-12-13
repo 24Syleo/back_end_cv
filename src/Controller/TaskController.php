@@ -68,14 +68,10 @@ class TaskController extends AbstractController
         try {
             $user = $this->getUser();
             $cols = $colRepo->findBy(['User' => $user]);
-
             foreach ($cols as $col) {
-                $tasks = $taskRepo->findBy(['cols' => $col]);
-    
-                $tasks[] = [
-                    'tasks' => $tasks,
-                ];
+                $tasks[] = $taskRepo->findBy(['cols' => $col->getId()]);
             }
+
             return $this->json([
                 "tasks" => $tasks
             ]);
