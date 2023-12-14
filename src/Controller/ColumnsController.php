@@ -101,6 +101,7 @@ class ColumnsController extends AbstractController
                 }
             }
             return $this->json([
+                "id"      => $column_id,
                 "success" => "colonne supprimé"
             ]);
         } catch (Exception $e) {

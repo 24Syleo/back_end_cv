@@ -97,6 +97,7 @@ class TaskController extends AbstractController
             $em->remove($task);
             $em->flush();
             return $this->json([
+                "id" => $task_id,
                 "success" => "Tache supprimée"
             ]);
         } catch (Exception $e) {
