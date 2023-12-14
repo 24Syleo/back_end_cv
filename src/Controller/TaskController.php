@@ -60,6 +60,31 @@ class TaskController extends AbstractController
         }
     }
 
+    #[Route('/api/move_task/{task_id}', name: 'move_task', methods: ['PATCH'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function moveTasks(Request $req ,int $task_id, TaskRepository $taskRepo, ColumnsRepository $colRepo ,EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $task = $taskRepo->find($task_id);
+            if (!$task) {
+                return $this->json([
+                    "error" => "Pas de tache",
+                ]);
+            }
+            $data = json_decode($req->getContent(), true);
+            $col = $colRepo->find($data["colId"]);
+            $task->setCols($col);
+            $em->flush();
+            return $this->json([
+                "task" => $task,
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
+    }
+
 
     #[Route('/api/get_tasks', name: 'get_tasks', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
