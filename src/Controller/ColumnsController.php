@@ -88,18 +88,14 @@ class ColumnsController extends AbstractController
     public function deleteColumns(int $column_id, ColumnsRepository $colRepo, EntityManagerInterface $em): JsonResponse
     {
         try {
-            $user = $this->getUser();
-            $cols = $colRepo->findBy(['User' => $user]);
-            foreach($cols as $col) {
-                if ($col->getId() === $column_id) {
-                    $em->remove($col);
-                    $em->flush();
-                } else {
-                    return $this->json([
-                        "error" => "La colonne n'existe pas"
-                    ]);
-                }
+            $col = $colRepo->find($column_id);
+            if (!$col) {
+                return $this->json([
+                    "error" => "La colonne n'existe pas"
+                ]);
             }
+            $em->remove($col);
+            $em->flush();
             return $this->json([
                 "id"      => $column_id,
                 "success" => "colonne supprimé"
