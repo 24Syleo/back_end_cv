@@ -72,7 +72,7 @@ class TaskController extends AbstractController
                 ]);
             }
             $data = json_decode($req->getContent(), true);
-            $col = $colRepo->find($data["colId"]);
+            $col = $colRepo->find($data["droppableId"]);
             $task->setCols($col);
             $em->flush();
             return $this->json([
