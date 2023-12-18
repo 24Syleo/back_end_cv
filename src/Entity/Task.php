@@ -32,6 +32,9 @@ class Task
     #[Assert\NotBlank(message: "Créer quand?")]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column]
+    private ?int $position = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,6 +84,18 @@ class Task
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): static
+    {
+        $this->position = $position;
 
         return $this;
     }
