@@ -75,9 +75,10 @@ class TaskController extends AbstractController
             $data = json_decode($req->getContent(), true);
             $col = $colRepo->find($data["droppableId"]);
             $task->setCols($col);
+            $task->setPosition($data['position']);
             $em->flush();
             return $this->json([
-                "task" => $task,
+                "message" => "Tache mis à jours"
             ]);
         } catch (Exception $e) {
             return $this->json([
