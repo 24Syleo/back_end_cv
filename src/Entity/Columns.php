@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OrderBy;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ColumnsRepository;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +23,6 @@ class Columns
     private ?string $title = null;
 
     #[ORM\Column(nullable: true)]
-    #[OrderBy(["position" => "ASC"])]
     private ?int $position = null;
 
     #[ORM\ManyToOne(inversedBy: 'columns')]

@@ -62,9 +62,8 @@ class ColumnsController extends AbstractController
     {
         try {
             $user = $this->getUser();
-            $cols = $colRepo->findBy(['User' => $user]);
+            $cols = $colRepo->findBy(['User' => $user], ["position" => "ASC"]);
             $columns = [];
-
             foreach ($cols as $col) {
                 $tasks = $taskRepo->findBy(['cols' => $col]);
     
