@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ColumnsRepository::class)]
+#[OrderBy(["position" => "ASC"])]
 #[ApiResource]
 class Columns
 {
@@ -24,7 +25,6 @@ class Columns
     private ?string $title = null;
 
     #[ORM\Column(nullable: true)]
-    #[OrderBy(["position" => "ASC"])]
     private ?int $position = null;
 
     #[ORM\ManyToOne(inversedBy: 'columns')]
