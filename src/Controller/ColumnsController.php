@@ -82,6 +82,30 @@ class ColumnsController extends AbstractController
             ]);
         }
     }
+    
+    #[Route('/api/move_columns/{col_id}', name: 'move_columns', methods: ['PATCH'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function moveColumns(Request $req ,int $col_id, ColumnsRepository $colRepo ,EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $col = $colRepo->find($col_id);
+            if (!$col) {
+                return $this->json([
+                    "error" => "Colonne pas trouvé",
+                ]);
+            }
+            $data = json_decode($req->getContent(), true);
+            $col->setPosition($data["position"]);
+            $em->flush();
+            return $this->json([
+                "message" => "position mis à jours"
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                "error" => $e,
+            ]);
+        }
+    }
 
     #[Route('/api/delete_columns/{column_id}', name: 'delete_columns', methods: ['DELETE'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
