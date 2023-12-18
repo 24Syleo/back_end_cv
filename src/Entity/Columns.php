@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ColumnsRepository;
+use Doctrine\ORM\Mapping\OrderBy;
 use ApiPlatform\Metadata\ApiResource;
+use App\Repository\ColumnsRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ColumnsRepository::class)]
@@ -23,6 +24,7 @@ class Columns
     private ?string $title = null;
 
     #[ORM\Column(nullable: true)]
+    #[OrderBy(["position" => "ASC"])]
     private ?int $position = null;
 
     #[ORM\ManyToOne(inversedBy: 'columns')]
