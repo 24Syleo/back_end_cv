@@ -34,6 +34,7 @@ class TaskController extends AbstractController
                 $task->setTitle($data['title']);
                 $task->setCols($colRepo->find($data['colId']));
                 $task->setDescription($data['description']);
+                $task->setPosition($data['position']);
                 if(!$task_id){
                     $task->setCreatedAt($date);
                 }
