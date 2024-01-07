@@ -44,6 +44,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $role = [];
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
     #[ORM\OneToMany(mappedBy: 'User', targetEntity: Columns::class, orphanRemoval: true)]
     private Collection $columns;
 
@@ -151,6 +154,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
     }
 
     /**
